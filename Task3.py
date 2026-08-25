@@ -1,56 +1,22 @@
-# Task 3: Company Salary Chain
-#------------------------------------
-# Base Class
-class Employee:
+# Task 3: Filter Generator for Employees
 
-    def __init__(self, name, base):
-        self.name = name
-        self.base = base
-
-    def total(self):
-        return self.base
-
-
-# Multilevel Inheritance: Level 1
-class TeamLead(Employee):
-
-    def __init__(self, name, base, team_size):
-        super().__init__(name, base)
-        self.team_size = team_size
-
-    def total(self):
-        return super().total() + (self.team_size * 200)
-
-
-# Multilevel Inheritance: Level 2
-class Manager(TeamLead):
-
-    def __init__(self, name, base, team_size, allowance):
-        super().__init__(name, base, team_size)
-        self.allowance = allowance
-
-    def total(self):
-        return super().total() + self.allowance
+def high_earners(employees, threshold):
+    for name, salary in employees:
+        if salary >= threshold:
+            yield (name, salary)
 
 
 if __name__ == '__main__':
-    # Create instances
-    staff = [
-        Employee('Ali', 5000),
-        TeamLead('Mona', 7000, 4),
-        Manager('Omar', 9000, 6, 3000),
+    employees = [
+        ('Ali', 3000),
+        ('Mona', 8000),
+        ('Omar', 5000),
+        ('Sara', 12000),
     ]
 
-    payroll = 0
-    for emp in staff:
-        salary = emp.total()
-        payroll += salary
-        print(f"{emp.name} = {salary}")
+    count = 0
+    for name, salary in high_earners(employees, 5000):
+        print(f"{name} {salary}")
+        count += 1
 
-    print(f"Payroll = {payroll}")
-
-    # Find the top earner using sorted + lambda
-    sorted_staff = sorted(staff, key=lambda x: x.total(), reverse=True)
-    top_earner = sorted_staff[0]
-
-    print(f"Top = {top_earner.name}")
+    print(f"Count = {count}")

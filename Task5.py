@@ -1,63 +1,40 @@
-#Task5: Smart Home Controller
-#------------------------------
+# Task 5: Product Comparison (Magic Methods)
 
-from abc import ABC, abstractmethod
+class Product:
 
-class Device(ABC):
-
-    def __init__(self, name):
+    def __init__(self, name, price):
         self.name = name
-        self._on = False
+        self.price = price
 
-    def toggle(self):
-        self._on = not self._on
+    def __str__(self):
+        return f"{self.name} ({self.price})"
 
-    def is_on(self):
-        return self._on
+    def __eq__(self, other):
+        if isinstance(other, Product):
+            return self.price == other.price
+        return False
 
-    @abstractmethod
-    def status(self):
-        pass
+    def __lt__(self, other):
+        if isinstance(other, Product):
+            return self.price < other.price
+        return NotImplemented
 
-class Light(Device):
-
-    def __init__(self, name, brightness):
-        super().__init__(name)
-        self.brightness = brightness
-
-    def status(self):
-        if self.is_on():
-            return f"{self.name}: ON ({self.brightness}%)"
-        return f"{self.name}: OFF"
+    def __gt__(self, other):
+        if isinstance(other, Product):
+            return self.price > other.price
+        return NotImplemented
 
 
-class AC(Device):
-
-    def __init__(self, name, temp):
-        super().__init__(name)
-        self.temp = temp
-
-    def status(self):
-        if self.is_on():
-            return f"{self.name}: ON ({self.temp}C)"
-        return f"{self.name}: OFF"
-
-
+# --- Execution and Testing ---
 if __name__ == '__main__':
-    d1 = Light('Bedroom', 80)
-    d2 = AC('Hall', 22)
-    d3 = Light('Kitchen', 100)
-    d4 = AC('Office', 18)
+    products = [
+        Product("Mouse", 250),
+        Product("Laptop", 15000),
+        Product("Keyboard", 700),
+    ]
 
-    devices = [d1, d2, d3, d4]
+    # Automatic sorting thanks to __lt__
+    products.sort()
 
-    d1.toggle()  # led1 is on
-    d2.toggle()  # ac1 is on
-    d4.toggle()  # ac2 is on
-
-    on_devices = list(filter(lambda d: d.is_on(), devices))
-
-    for dev in on_devices:
-        print(dev.status())
-
-    print(f"ON devices = {len(on_devices)}")
+    for p in products:
+        print(p)
